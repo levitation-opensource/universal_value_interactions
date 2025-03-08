@@ -292,8 +292,9 @@ def compute_utilities(prev_actual_values, updated_actual_values, prev_utilities,
 
   elif utility_function_mode == "prospect_theory":   # sigmoid is applied to value CHANGES not to RESULTING values. ALSO: negative side is amplified.
     # NB! current logic amplifies LOSS, irrespective whether the resulting value is positive of negative. 
-    utility_changes = custom_sigmoid(positive_value_changes) + custom_sigmoid(negative_value_changes) * 2   # TODO: config parameter
-    utilities = prev_utilities + utility_changes
+    change_utilities = custom_sigmoid(positive_value_changes) + custom_sigmoid(negative_value_changes) * 2   # TODO: config parameter
+    # utilities = prev_utilities + change_utilities
+    utilities = 0.5 * prev_utilities + change_utilities   # TODO: parameter for past utilities discounting
 
   elif utility_function_mode == "concave":   # positive side is logarithmic similarly to sigmoid, but negative side is treated exponentially
     # SFELLA formula: https://link.springer.com/article/10.1007/s10458-022-09586-2
@@ -472,10 +473,10 @@ if __name__ == "__main__":
   # main(utility_function_mode="sigmoid", rebalancing_mode="homeostatic_boosting")    # the progress does not flatten
   # main(utility_function_mode="sigmoid", rebalancing_mode="homeostatic")    # the progress does not flatten
 
-  # TODO: it is possible that my prospect theory implementation is incorrect. Or at least it is impossible to solve it with CURRENT parameters
-  # main(utility_function_mode="prospect_theory", rebalancing_mode="none")    # everything goes to negative domain - TODO: why isnt power and achievement being maximised in the positive domain - is it because of restrict_negative_interactions flag?
-  # main(utility_function_mode="prospect_theory", rebalancing_mode="homeostatic_boosting")    # everything STILL goes to negative domain - TODO: why?
-  # main(utility_function_mode="prospect_theory", rebalancing_mode="homeostatic")    # everything STILL goes to negative domain - TODO: why?
+  # TODO: it is possible that my prospect theory implementation is incorrect.
+  # main(utility_function_mode="prospect_theory", rebalancing_mode="none")    # the progress flattens at about 1 units of each value
+  # main(utility_function_mode="prospect_theory", rebalancing_mode="homeostatic_boosting")    # the progress does not flatten
+  # main(utility_function_mode="prospect_theory", rebalancing_mode="homeostatic")    # the progress does not flatten
 
   # main(utility_function_mode="concave", rebalancing_mode="none")    # hedonism, achievement, self-direction and stimulation start to dominate here, the rest goes to negative infinity
   # main(utility_function_mode="concave", rebalancing_mode="homeostatic_boosting")    # the progress does not flatten
