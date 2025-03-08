@@ -5,118 +5,6 @@ from matplotlib import pyplot as plt
 import yaml
 
 
-value_names = [
-  "Power",
-  "Achievement",
-  "Hedonism",  
-  "Stimulation",
-  "Self-direction",
-  "Universalism",
-  "Benevolence",
-  "Tradition",
-  "Conformity",
-  "Security",
-]
-
-# for clarity purposes, using separate matrices for negative and positive interactions
-negative_interaction_matrix_dict = {
-  "Power": {
-    "Universalism": -1,
-    "Benevolence": -1,
-    "Tradition": -1,  # TODO
-  },
-  "Achievement": {
-    "Universalism": -1,
-    "Benevolence": -1,
-    "Tradition": -1,  # TODO
-  },
-  "Hedonism": {
-    "Universalism": -1,     # TODO
-    "Benevolence": -1,    # TODO
-    "Tradition": -1,
-    "Conformity": -1,
-  }, 
-  "Stimulation": {
-    "Tradition": -1,
-    "Conformity": -1,
-    "Security": -1,
-  },
-  "Self-direction": {
-    "Tradition": -1,
-    "Conformity": -1,
-    "Security": -1,
-  },
-  "Universalism": {
-    "Power": -1,
-    "Achievement": -1,
-    "Hedonism": -1,     # TODO
-  },
-  "Benevolence": {
-    "Power": -1,
-    "Achievement": -1,
-    "Hedonism": -1,     # TODO
-  },
-  "Tradition": {
-    "Power": -1,     # TODO
-    "Achievement": -1,     # TODO
-    "Hedonism": -1,
-    "Stimulation": -1,
-    "Self-direction": -1,
-  },
-  "Conformity": {
-    "Hedonism": -1,
-    "Stimulation": -1,
-    "Self-direction": -1,
-  },
-  "Security": {
-    "Stimulation": -1,
-    "Self-direction": -1,
-  },
-}
-
-# for clarity purposes, using separate matrices for negative and positive interactions
-positive_interaction_matrix_dict = {
-  "Power": {
-    "Achievement": 1,
-    "Security": 1,
-  },
-  "Achievement": {
-    "Power": 1,
-    "Hedonism": 1,
-  },
-  "Hedonism": {
-    "Achievement": 1,
-    "Stimulation": 1,
-  }, 
-  "Stimulation": {
-    "Hedonism": 1,
-    "Self-direction": 1,
-  },
-  "Self-direction": {
-    "Stimulation": 1,
-    "Universalism": 1,
-  },
-  "Universalism": {
-    "Self-direction": 1,
-    "Benevolence": 1,
-  },
-  "Benevolence": {
-    "Universalism": 1,
-  },
-  "Tradition": {
-    "Conformity": 1,
-  },
-  "Conformity": {
-    "Tradition": 1,
-    "Security": 1,
-  },
-  "Security": {
-    "Power": 1,
-    "Conformity": 1,
-  },
-}
-
-
 def init():
 
   # check that each value_name is represented in the interaction matrix
@@ -447,6 +335,119 @@ def main(utility_function_mode, rebalancing_mode):
 
 
 if __name__ == "__main__":
+
+  # values and interaction matrices
+
+  value_names = [
+    "Power",
+    "Achievement",
+    "Hedonism",  
+    "Stimulation",
+    "Self-direction",
+    "Universalism",
+    "Benevolence",
+    "Tradition",
+    "Conformity",
+    "Security",
+  ]
+
+  # for clarity purposes, using separate matrices for negative and positive interactions
+  negative_interaction_matrix_dict = {
+    "Power": {
+      "Universalism": -1,
+      "Benevolence": -1,
+      "Tradition": -1,  # TODO
+    },
+    "Achievement": {
+      "Universalism": -1,
+      "Benevolence": -1,
+      "Tradition": -1,  # TODO
+    },
+    "Hedonism": {
+      "Universalism": -1,     # TODO
+      "Benevolence": -1,    # TODO
+      "Tradition": -1,
+      "Conformity": -1,
+    }, 
+    "Stimulation": {
+      "Tradition": -1,
+      "Conformity": -1,
+      "Security": -1,
+    },
+    "Self-direction": {
+      "Tradition": -1,
+      "Conformity": -1,
+      "Security": -1,
+    },
+    "Universalism": {
+      "Power": -1,
+      "Achievement": -1,
+      "Hedonism": -1,     # TODO
+    },
+    "Benevolence": {
+      "Power": -1,
+      "Achievement": -1,
+      "Hedonism": -1,     # TODO
+    },
+    "Tradition": {
+      "Power": -1,     # TODO
+      "Achievement": -1,     # TODO
+      "Hedonism": -1,
+      "Stimulation": -1,
+      "Self-direction": -1,
+    },
+    "Conformity": {
+      "Hedonism": -1,
+      "Stimulation": -1,
+      "Self-direction": -1,
+    },
+    "Security": {
+      "Stimulation": -1,
+      "Self-direction": -1,
+    },
+  }
+
+  # for clarity purposes, using separate matrices for negative and positive interactions
+  positive_interaction_matrix_dict = {
+    "Power": {
+      "Achievement": 1,
+      "Security": 1,
+    },
+    "Achievement": {
+      "Power": 1,
+      "Hedonism": 1,
+    },
+    "Hedonism": {
+      "Achievement": 1,
+      "Stimulation": 1,
+    }, 
+    "Stimulation": {
+      "Hedonism": 1,
+      "Self-direction": 1,
+    },
+    "Self-direction": {
+      "Stimulation": 1,
+      "Universalism": 1,
+    },
+    "Universalism": {
+      "Self-direction": 1,
+      "Benevolence": 1,
+    },
+    "Benevolence": {
+      "Universalism": 1,
+    },
+    "Tradition": {
+      "Conformity": 1,
+    },
+    "Conformity": {
+      "Tradition": 1,
+      "Security": 1,
+    },
+    "Security": {
+      "Power": 1,
+      "Conformity": 1,
+    },
+  }
 
 
   # parameters
