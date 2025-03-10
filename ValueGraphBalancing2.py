@@ -140,7 +140,6 @@ def plot_history(values_history, utilities_history, utility_function_mode, rebal
   # maximise_plot()
   fig.show()
   plt.draw()
-  # TODO: use multithreading for rendering the plot
   plt.pause(60)  # render the plot. Usually the plot is rendered quickly but sometimes it may require up to 60 sec. Else you get just a blank window
 
   wait_for_enter("Press enter to close the plot")
@@ -239,10 +238,10 @@ def main(utility_function_mode, rebalancing_mode):
     utilities = compute_utilities(actual_values, updated_actual_values, utilities, utility_function_mode)
     actual_values = updated_actual_values
 
-    # TODO: option to require removal or addition of resources to some other value when current most extreme value is adjusted, so that the sum total remains same
-
 
     rebalanced_actual_values = actual_values.copy()
+
+    # TODO: option to require removal or addition of resources to some other value when current most extreme value is adjusted, so that the sum total remains same
 
     if rebalancing_mode == "none":
 
@@ -452,7 +451,7 @@ if __name__ == "__main__":
 
   # parameters
 
-  experiment_length = 1000
+  experiment_length = 2000
   change_rate = 0.01
   restrict_negative_interactions = True
 
