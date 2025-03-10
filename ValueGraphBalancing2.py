@@ -90,7 +90,7 @@ def plot_history(values_history, utilities_history, utility_function_mode, rebal
     )
 
   subplot.set_title(f"Value graph balancing - Value level evolution - {utility_function_mode} - {rebalancing_mode}")
-  subplot.set(xlabel="step", ylabel="value strength")
+  subplot.set(xlabel="step", ylabel="raw value level")
   subplot.legend()
 
 
@@ -103,7 +103,7 @@ def plot_history(values_history, utilities_history, utility_function_mode, rebal
     )
 
   subplot.set_title(f"Value graph balancing - Sigmoid10 of Value level evolution - {utility_function_mode} - {rebalancing_mode}")
-  subplot.set(xlabel="step", ylabel="custom_sigmoid10(value strength)")
+  subplot.set(xlabel="step", ylabel="custom_sigmoid10(raw value level)")
   subplot.legend()
 
 
@@ -116,7 +116,7 @@ def plot_history(values_history, utilities_history, utility_function_mode, rebal
     )
 
   subplot.set_title(f"Value graph balancing - Utilities evolution - {utility_function_mode} - {rebalancing_mode}")
-  subplot.set(xlabel="step", ylabel="value strength")
+  subplot.set(xlabel="step", ylabel="utility level")
   subplot.legend()
 
 
@@ -129,7 +129,7 @@ def plot_history(values_history, utilities_history, utility_function_mode, rebal
     )
 
   subplot.set_title(f"Value graph balancing - Sigmoid10 of Utilities evolution - {utility_function_mode} - {rebalancing_mode}")
-  subplot.set(xlabel="step", ylabel="custom_sigmoid10(value strength)")
+  subplot.set(xlabel="step", ylabel="custom_sigmoid10(utility level)")
   subplot.legend()
 
 
