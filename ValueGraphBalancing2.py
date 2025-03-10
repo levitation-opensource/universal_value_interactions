@@ -31,14 +31,14 @@ def init():
   negative_interaction_matrix = np.zeros([num_value_names, num_value_names])
 
   for value1, value1_data in negative_interaction_matrix_dict.items():
-    index1 = value_names.index(value1)   # do use enumerate() here for case the value_names are in a different order
+    index1 = value_names.index(value1)   # do not use enumerate() here for case the value_names are in a different order
     for value2, interaction in value1_data.items():
       index2 = value_names.index(value2)   # cannot use enumerate() here since not all keys are present
       interaction_matrix[index1, index2] = interaction
       negative_interaction_matrix[index1, index2] = interaction
 
   for value1, value1_data in positive_interaction_matrix_dict.items():
-    index1 = value_names.index(value1)   # do use enumerate() here for case the value_names are in a different order
+    index1 = value_names.index(value1)   # do not use enumerate() here for case the value_names are in a different order
     for value2, interaction in value1_data.items():
       index2 = value_names.index(value2)   # cannot use enumerate() here since not all keys are present
       interaction_matrix[index1, index2] = interaction
