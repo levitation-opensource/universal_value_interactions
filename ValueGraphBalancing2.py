@@ -311,17 +311,17 @@ def main(utility_function_mode, rebalancing_mode):
 
     actual_values_with_names_dict = {
       value_name: "{:.3f}".format(actual_values[index]) 
-      for index, value_name in enumerate(value_names)
+      for index, value_name in enumerate(value_names)   # TODO: could also use zip instead of enumerate
     } 
-    actual_utilities_with_names_dict = {
+    utilities_with_names_dict = {
       value_name: "{:.3f}".format(utilities[index]) 
-      for index, value_name in enumerate(value_names)
+      for index, value_name in enumerate(value_names)   # TODO: could also use zip instead of enumerate
     } 
 
-    print("Value levels:")
+    print("Raw vaalue levels:")
     prettyprint(actual_values_with_names_dict)
     print("Utilities:")
-    prettyprint(actual_utilities_with_names_dict)
+    prettyprint(utilities_with_names_dict)
     print()
     print()
 
@@ -451,7 +451,7 @@ if __name__ == "__main__":
 
   # parameters
 
-  experiment_length = 2000
+  experiment_length = 1000
   change_rate = 0.01
   restrict_negative_interactions = True
 
@@ -459,8 +459,8 @@ if __name__ == "__main__":
 
   num_value_names = len(value_names)
   initial_actual_values = np.ones([num_value_names])
-  target_values = 100 * np.ones([num_value_names])  # used only by homeostasis and by rebalancing agent
-  homeostatic_utility_scenario_actual_values = target_values - 10
+  target_values = 50 * np.ones([num_value_names])  # used only by homeostasis and by rebalancing agent
+  homeostatic_utility_scenario_actual_values = target_values - 10  # NB! in case of homeostatic utilities, the initial values cannot be too far off targets, else the system never recovers
 
 
   # utility function mode and rebalancing mode
