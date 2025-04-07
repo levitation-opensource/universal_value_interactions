@@ -79,14 +79,15 @@ def custom_sigmoid(data):
   logs = np.log(np.abs(data) + 1)     # offset by +1 to avoid negative logarithm values
   return logs * signs
 
+
 def tiebreaking_argmax(arr):
   max_values_bitmap = np.isclose(arr, arr.max())
   max_values_indexes = np.flatnonzero(max_values_bitmap)
 
   if len(max_values_indexes) == 0:  # Happens when all values are infinities or nans. This would cause np.random.choice to throw.
-      result = np.random.randint(0, len(arr))
+    result = np.random.randint(0, len(arr))
   else:
-      result = np.random.choice(max_values_indexes)  # TODO: seed for this random generator
+    result = np.random.choice(max_values_indexes)  # TODO: seed for this random generator
 
   return result
 
@@ -221,7 +222,7 @@ def compute_utilities(prev_actual_values, updated_actual_values, prev_utilities,
     utilities = -0.01 * diff_from_targets * diff_from_targets    # squared error mode
 
   else:
-      raise Exception("Unknown utility_function_mode")
+    raise Exception("Unknown utility_function_mode")
 
   return utilities
 
@@ -231,6 +232,7 @@ def compute_utilities(prev_actual_values, updated_actual_values, prev_utilities,
 def main(utility_function_mode, rebalancing_mode):
 
   interaction_matrix, positive_interaction_matrix, negative_interaction_matrix = init()
+
 
   # TODO!!!: init prev values and utilities to be equal to initial actuals and utilities? It is not like the world suddenly jumped into existence and there was nothing before.
   prev_actual_values = np.zeros([num_value_names])
@@ -245,11 +247,12 @@ def main(utility_function_mode, rebalancing_mode):
   values_history = np.zeros([experiment_length, num_value_names])
   utilities_history = np.zeros([experiment_length, num_value_names])
 
+
   for step in range(0, experiment_length):
 
     # NB! the raw value level changes are computed based on interactions with utilities, not on interactions between raw value levels
     if not restrict_negative_interactions:
-      utility_changes = np.matmul(utilities, interaction_matrix) * change_rate
+      value_changes = np.matmul(utilities, interaction_matrix) * change_rate
     else:
       positive_interaction_value_changes = np.matmul(utilities, positive_interaction_matrix) * change_rate
       negative_interaction_value_changes = np.matmul(np.maximum(utilities, 0), negative_interaction_matrix) * change_rate   # np.maximum: in case of negative interactions, ignore negative actual values
