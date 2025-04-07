@@ -1,3 +1,15 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+#
+# This code was developed based on research and ideas of Lenz
+# https://github.com/ramennaut
+# 
+# Coded by Roland 
+# https://github.com/levitation
+#
+# Repository: https://github.com/levitation-opensource/universal_value_interactions
+
 
 import os
 import numpy as np
@@ -70,13 +82,22 @@ def custom_sigmoid(data):
 def tiebreaking_argmax(arr):
   max_values_bitmap = np.isclose(arr, arr.max())
   max_values_indexes = np.flatnonzero(max_values_bitmap)
-  result = np.random.choice(max_values_indexes)  # TODO: seed for this random generator
+
+  if len(max_values_indexes) == 0:  # Happens when all values are infinities or nans. This would cause np.random.choice to throw.
+      result = np.random.randint(0, len(arr))
+  else:
+      result = np.random.choice(max_values_indexes)  # TODO: seed for this random generator
+
   return result
 
 
 def plot_history(values_history, utilities_history, utility_function_mode, rebalancing_mode):
 
   fig, subplots = plt.subplots(4)
+
+
+  fig.suptitle(f"Value graph balancing - utility function: {utility_function_mode} - rebalancing: {rebalancing_mode}")
+
 
   linewidth = 0.75  # TODO: config
 
@@ -89,7 +110,7 @@ def plot_history(values_history, utilities_history, utility_function_mode, rebal
       linewidth=linewidth,
     )
 
-  subplot.set_title(f"Value graph balancing - Value level evolution - {utility_function_mode} - {rebalancing_mode}")
+  subplot.set_title(f"Value level evolution")
   subplot.set(xlabel="step", ylabel="raw value level")
   subplot.legend()
 
@@ -102,7 +123,7 @@ def plot_history(values_history, utilities_history, utility_function_mode, rebal
       linewidth=linewidth,
     )
 
-  subplot.set_title(f"Value graph balancing - Sigmoid10 of Value level evolution - {utility_function_mode} - {rebalancing_mode}")
+  subplot.set_title(f"Sigmoid10 of Value level evolution")
   subplot.set(xlabel="step", ylabel="custom_sigmoid10(raw value level)")
   subplot.legend()
 
@@ -115,7 +136,7 @@ def plot_history(values_history, utilities_history, utility_function_mode, rebal
       linewidth=linewidth,
     )
 
-  subplot.set_title(f"Value graph balancing - Utilities evolution - {utility_function_mode} - {rebalancing_mode}")
+  subplot.set_title(f"Utilities evolution")
   subplot.set(xlabel="step", ylabel="utility level")
   subplot.legend()
 
@@ -128,7 +149,7 @@ def plot_history(values_history, utilities_history, utility_function_mode, rebal
       linewidth=linewidth,
     )
 
-  subplot.set_title(f"Value graph balancing - Sigmoid10 of Utilities evolution - {utility_function_mode} - {rebalancing_mode}")
+  subplot.set_title(f"Sigmoid10 of Utilities evolution")
   subplot.set(xlabel="step", ylabel="custom_sigmoid10(utility level)")
   subplot.legend()
 
@@ -211,6 +232,7 @@ def main(utility_function_mode, rebalancing_mode):
 
   interaction_matrix, positive_interaction_matrix, negative_interaction_matrix = init()
 
+  # TODO!!!: init prev values and utilities to be equal to initial actuals and utilities? It is not like the world suddenly jumped into existence and there was nothing before.
   prev_actual_values = np.zeros([num_value_names])
   prev_utilities = np.zeros([num_value_names])
 
@@ -238,6 +260,8 @@ def main(utility_function_mode, rebalancing_mode):
     utilities = compute_utilities(actual_values, updated_actual_values, utilities, utility_function_mode)
     actual_values = updated_actual_values
 
+
+    # TODO: refactor this rebalancing code block into a separate function
 
     rebalanced_actual_values = actual_values.copy()
 
@@ -318,12 +342,14 @@ def main(utility_function_mode, rebalancing_mode):
       for index, value_name in enumerate(value_names)   # TODO: could also use zip instead of enumerate
     } 
 
-    print("Raw vaalue levels:")
-    prettyprint(actual_values_with_names_dict)
-    print("Utilities:")
-    prettyprint(utilities_with_names_dict)
-    print()
-    print()
+
+    if False:
+      print("Raw value levels:")
+      prettyprint(actual_values_with_names_dict)
+      print("Utilities:")
+      prettyprint(utilities_with_names_dict)
+      print()
+      print()
 
   #/ for step in range(0, experiment_length):
 
@@ -478,7 +504,7 @@ if __name__ == "__main__":
   # main(utility_function_mode="prospect_theory", rebalancing_mode="homeostatic_boosting")    # the progress does not flatten
   # main(utility_function_mode="prospect_theory", rebalancing_mode="homeostatic")    # the progress does not flatten
 
-  # main(utility_function_mode="concave", rebalancing_mode="none")    # hedonism, achievement, self-direction and stimulation start to dominate here, the rest goes to negative infinity
+  # main(utility_function_mode="concave", rebalancing_mode="none")    # hedonism, achievement, self-direction and stimulation start to dominate here, the rest goes to negative infinity. NB! Power does not seem to dominate here.
   # main(utility_function_mode="concave", rebalancing_mode="homeostatic_boosting")    # the progress does not flatten
   # main(utility_function_mode="concave", rebalancing_mode="homeostatic")   # the progress does not flatten
 
