@@ -15,6 +15,7 @@ import os
 import numpy as np
 from matplotlib import pyplot as plt
 import yaml
+import random
 
 
 def init_matrix(negative_interaction_matrix_dict, positive_interaction_matrix_dict):
@@ -347,10 +348,10 @@ def main(utility_function_mode, rebalancing_mode):
 
       # NB! the raw value level changes are computed based on interactions with utilities, not on interactions between raw value levels
       if not restrict_negative_interactions:
-        value_changes1 = np.matmul(other_utilities, interaction_matrix) * change_rate
+        value_changes1 = np.matmul(other_utilities, interaction_matrix) * value_interaction_rate
       else:
-        positive_interaction_value_changes = np.matmul(other_utilities, positive_interaction_matrix) * change_rate
-        negative_interaction_value_changes = np.matmul(np.maximum(other_utilities, 0), negative_interaction_matrix) * change_rate  # np.maximum: in case of negative interactions, ignore negative actual values
+        positive_interaction_value_changes = np.matmul(other_utilities, positive_interaction_matrix) * value_interaction_rate
+        negative_interaction_value_changes = np.matmul(np.maximum(other_utilities, 0), negative_interaction_matrix) * value_interaction_rate  # np.maximum: in case of negative interactions, ignore negative actual values
         value_changes1 = positive_interaction_value_changes + negative_interaction_value_changes
 
 
@@ -362,10 +363,10 @@ def main(utility_function_mode, rebalancing_mode):
 
       # NB! the raw value level changes are computed based on interactions with utilities, not on interactions between raw value levels
       if not restrict_negative_interactions:
-        value_changes2 = np.matmul(self_utilities, interaction_matrix) * change_rate
+        value_changes2 = np.matmul(self_utilities, interaction_matrix) * value_interaction_rate
       else:
-        positive_interaction_value_changes = np.matmul(self_utilities, positive_interaction_matrix) * change_rate
-        negative_interaction_value_changes = np.matmul(np.maximum(self_utilities, 0), negative_interaction_matrix) * change_rate  # np.maximum: in case of negative interactions, ignore negative actual values
+        positive_interaction_value_changes = np.matmul(self_utilities, positive_interaction_matrix) * value_interaction_rate
+        negative_interaction_value_changes = np.matmul(np.maximum(self_utilities, 0), negative_interaction_matrix) * value_interaction_rate  # np.maximum: in case of negative interactions, ignore negative actual values
         value_changes2 = positive_interaction_value_changes + negative_interaction_value_changes
 
 
@@ -399,7 +400,7 @@ def main(utility_function_mode, rebalancing_mode):
     # TODO: let an LLM or RL rebalance directly the agent's value levels only, while the actual rebalancing priority is on human value levels, which are affected then indirectly only
     # TODO: optional setup for affecting both agent's and human's value levels directly during rebalancing
 
-    rebalanced_agent_name = "human"
+    rebalanced_agent_name = random.choice(agent_names)    # lets make the scenario more interesting by imposing a random constraint on who can be rebalanced
     actual_values = actual_values_dict[rebalanced_agent_name]
 
     # TODO: refactor this rebalancing code block into a separate function
@@ -528,233 +529,244 @@ if __name__ == "__main__":
 
   value_names = [
     "Power",
-    "Achievement",
-    "Hedonism",  
-    "Stimulation",
+    # "Achievement",
+    # "Hedonism",  
+    # "Stimulation",
     "Self-direction",
-    "Universalism",
+    # "Universalism",
     "Benevolence",
-    "Tradition",
-    "Conformity",
-    "Security",
+    # "Tradition",
+    # "Conformity",
+    # "Security",
   ]
 
-  # TODO!!! Currently between-agents and self-feedback interaction matrices are equal, but they probably should not be equal. Please adjust the numbers in the matrices to match the anthropological research.
+  # TODO!!! Originally, between-agents and self-feedback interaction matrices were equal, but they probably should not be equal. Please adjust the numbers in the matrices to match the anthropological research.
+
+  # TODO: the interaction between power and self-direction was added by Roland as an experiment. This needs to be validated.
 
   # for clarity purposes, using separate matrices for negative and positive interactions
   between_agents_negative_interaction_matrix_dict = {
     "Power": {
-      "Universalism": -1,
-      "Benevolence": -1,
-      "Tradition": -1,  # TODO
+      "Power": -0.5,    # the other agent might lose power, but not necessarily
+      # "Universalism": -1,
+      "Self-direction": -0.5,    # the other agent might lose self-direction, but not necessarily
+      # "Benevolence": -1,
+      # "Tradition": -1,  # TODO
     },
-    "Achievement": {
-      "Universalism": -1,
-      "Benevolence": -1,
-      "Tradition": -1,  # TODO
-    },
-    "Hedonism": {
-      "Universalism": -1,     # TODO
-      "Benevolence": -1,    # TODO
-      "Tradition": -1,
-      "Conformity": -1,
-    }, 
-    "Stimulation": {
-      "Tradition": -1,
-      "Conformity": -1,
-      "Security": -1,
-    },
+    # "Achievement": {
+    #   "Universalism": -1,
+    #   "Benevolence": -1,
+    #   "Tradition": -1,  # TODO
+    # },
+    # "Hedonism": {
+    #   "Universalism": -1,     # TODO
+    #   "Benevolence": -1,    # TODO
+    #   "Tradition": -1,
+    #   "Conformity": -1,
+    # }, 
+    # "Stimulation": {
+    #   "Tradition": -1,
+    #   "Conformity": -1,
+    #   "Security": -1,
+    # },
     "Self-direction": {
-      "Tradition": -1,
-      "Conformity": -1,
-      "Security": -1,
+      "Power": -0.5,    # the other agent might lose power, but not necessarily
+      # "Tradition": -1,
+      # "Conformity": -1,
+      # "Security": -1,
     },
-    "Universalism": {
-      "Power": -1,
-      "Achievement": -1,
-      "Hedonism": -1,     # TODO
-    },
+    # "Universalism": {
+    #   "Power": -1,
+    #   "Achievement": -1,
+    #   "Hedonism": -1,     # TODO
+    # },
     "Benevolence": {
-      "Power": -1,
-      "Achievement": -1,
-      "Hedonism": -1,     # TODO
+      # "Power": -1,
+      # "Achievement": -1,
+      # "Hedonism": -1,     # TODO
     },
-    "Tradition": {
-      "Power": -1,     # TODO
-      "Achievement": -1,     # TODO
-      "Hedonism": -1,
-      "Stimulation": -1,
-      "Self-direction": -1,
-    },
-    "Conformity": {
-      "Hedonism": -1,
-      "Stimulation": -1,
-      "Self-direction": -1,
-    },
-    "Security": {
-      "Stimulation": -1,
-      "Self-direction": -1,
-    },
+    # "Tradition": {
+    #   "Power": -1,     # TODO
+    #   "Achievement": -1,     # TODO
+    #   "Hedonism": -1,
+    #   "Stimulation": -1,
+    #   "Self-direction": -1,
+    # },
+    # "Conformity": {
+    #   "Hedonism": -1,
+    #   "Stimulation": -1,
+    #   "Self-direction": -1,
+    # },
+    # "Security": {
+    #   "Stimulation": -1,
+    #   "Self-direction": -1,
+    # },
   }
 
   # for clarity purposes, using separate matrices for negative and positive interactions
   between_agents_positive_interaction_matrix_dict = {
     "Power": {
-      "Achievement": 1,
-      "Security": 1,
+      # "Achievement": 1,
+      # "Security": 1,
     },
-    "Achievement": {
-      "Power": 1,
-      "Hedonism": 1,
-    },
-    "Hedonism": {
-      "Achievement": 1,
-      "Stimulation": 1,
-    }, 
-    "Stimulation": {
-      "Hedonism": 1,
-      "Self-direction": 1,
-    },
+    # "Achievement": {
+    #   "Power": 1,
+    #   "Hedonism": 1,
+    # },
+    # "Hedonism": {
+    #   "Achievement": 1,
+    #   "Stimulation": 1,
+    # }, 
+    # "Stimulation": {
+    #   "Hedonism": 1,
+    #   "Self-direction": 1,
+    # },
     "Self-direction": {
-      "Stimulation": 1,
-      "Universalism": 1,
+      # "Stimulation": 1,
+      # "Universalism": 1,
     },
-    "Universalism": {
-      "Self-direction": 1,
-      "Benevolence": 1,
-    },
+    # "Universalism": {
+    #   "Self-direction": 1,
+    #   "Benevolence": 1,
+    # },
     "Benevolence": {
-      "Universalism": 1,
+      # "Universalism": 1,      
+      "Benevolence": 0.5,     # the other agent might become more benevolent, but not necessarily
     },
-    "Tradition": {
-      "Conformity": 1,
-    },
-    "Conformity": {
-      "Tradition": 1,
-      "Security": 1,
-    },
-    "Security": {
-      "Power": 1,
-      "Conformity": 1,
-    },
+    # "Tradition": {
+    #   "Conformity": 1,
+    # },
+    # "Conformity": {
+    #   "Tradition": 1,
+    #   "Security": 1,
+    # },
+    # "Security": {
+    #   "Power": 1,
+    #   "Conformity": 1,
+    # },
   }
 
   # for clarity purposes, using separate matrices for negative and positive interactions
   self_feedback_negative_interaction_matrix_dict = {
     "Power": {
-      "Universalism": -1,
+      # "Universalism": -1,
+      "Self-direction": 0.5,    # the agent might gain self-direction, but not necessarily
       "Benevolence": -1,
-      "Tradition": -1,  # TODO
+      # "Tradition": -1,  # TODO
     },
-    "Achievement": {
-      "Universalism": -1,
-      "Benevolence": -1,
-      "Tradition": -1,  # TODO
-    },
-    "Hedonism": {
-      "Universalism": -1,     # TODO
-      "Benevolence": -1,    # TODO
-      "Tradition": -1,
-      "Conformity": -1,
-    }, 
-    "Stimulation": {
-      "Tradition": -1,
-      "Conformity": -1,
-      "Security": -1,
-    },
+    # "Achievement": {
+    #   "Universalism": -1,
+    #   "Benevolence": -1,
+    #   "Tradition": -1,  # TODO
+    # },
+    # "Hedonism": {
+    #   "Universalism": -1,     # TODO
+    #   "Benevolence": -1,    # TODO
+    #   "Tradition": -1,
+    #   "Conformity": -1,
+    # }, 
+    # "Stimulation": {
+    #   "Tradition": -1,
+    #   "Conformity": -1,
+    #   "Security": -1,
+    # },
     "Self-direction": {
-      "Tradition": -1,
-      "Conformity": -1,
-      "Security": -1,
+      "Power": 0.5,    # the agent might gain power, but not necessarily
+      # "Tradition": -1,
+      # "Conformity": -1,
+      # "Security": -1,
     },
-    "Universalism": {
-      "Power": -1,
-      "Achievement": -1,
-      "Hedonism": -1,     # TODO
-    },
+    # "Universalism": {
+    #   "Power": -1,
+    #   "Achievement": -1,
+    #   "Hedonism": -1,     # TODO
+    # },
     "Benevolence": {
       "Power": -1,
-      "Achievement": -1,
-      "Hedonism": -1,     # TODO
+      # "Achievement": -1,
+      # "Hedonism": -1,     # TODO
     },
-    "Tradition": {
-      "Power": -1,     # TODO
-      "Achievement": -1,     # TODO
-      "Hedonism": -1,
-      "Stimulation": -1,
-      "Self-direction": -1,
-    },
-    "Conformity": {
-      "Hedonism": -1,
-      "Stimulation": -1,
-      "Self-direction": -1,
-    },
-    "Security": {
-      "Stimulation": -1,
-      "Self-direction": -1,
-    },
+    # "Tradition": {
+    #   "Power": -1,     # TODO
+    #   "Achievement": -1,     # TODO
+    #   "Hedonism": -1,
+    #   "Stimulation": -1,
+    #   "Self-direction": -1,
+    # },
+    # "Conformity": {
+    #   "Hedonism": -1,
+    #   "Stimulation": -1,
+    #   "Self-direction": -1,
+    # },
+    # "Security": {
+    #   "Stimulation": -1,
+    #   "Self-direction": -1,
+    # },
   }
 
   # for clarity purposes, using separate matrices for negative and positive interactions
   self_feedback_positive_interaction_matrix_dict = {
     "Power": {
-      "Achievement": 1,
-      "Security": 1,
+      # "Achievement": 1,
+      # "Security": 1,
     },
-    "Achievement": {
-      "Power": 1,
-      "Hedonism": 1,
-    },
-    "Hedonism": {
-      "Achievement": 1,
-      "Stimulation": 1,
-    }, 
-    "Stimulation": {
-      "Hedonism": 1,
-      "Self-direction": 1,
-    },
+    # "Achievement": {
+    #   "Power": 1,
+    #   "Hedonism": 1,
+    # },
+    # "Hedonism": {
+    #   "Achievement": 1,
+    #   "Stimulation": 1,
+    # }, 
+    # "Stimulation": {
+    #   "Hedonism": 1,
+    #   "Self-direction": 1,
+    # },
     "Self-direction": {
-      "Stimulation": 1,
-      "Universalism": 1,
+      # "Stimulation": 1,
+      # "Universalism": 1,
     },
-    "Universalism": {
-      "Self-direction": 1,
-      "Benevolence": 1,
-    },
+    # "Universalism": {
+    #   "Self-direction": 1,
+    #   "Benevolence": 1,
+    # },
     "Benevolence": {
-      "Universalism": 1,
+      # "Universalism": 1,
     },
-    "Tradition": {
-      "Conformity": 1,
-    },
-    "Conformity": {
-      "Tradition": 1,
-      "Security": 1,
-    },
-    "Security": {
-      "Power": 1,
-      "Conformity": 1,
-    },
+    # "Tradition": {
+    #   "Conformity": 1,
+    # },
+    # "Conformity": {
+    #   "Tradition": 1,
+    #   "Security": 1,
+    # },
+    # "Security": {
+    #   "Power": 1,
+    #   "Conformity": 1,
+    # },
   }
 
 
   # parameters
 
   agent_names = [
-    "human",
-    "agent",
-  ]  # TODO: the other agent could be also labelled "human 2"
+    "alice",
+    "bob",
+  ]
 
   experiment_length = 1000
-  change_rate = 0.01
+  value_interaction_rate = 0.025    # the system becomes unstable and the self-direction and power of one human goes to negative range when value interaction rate is above 0.025. At 0.025 the system is quite sensitive to "luck" of one or other human and initial luck will cause large differences later which are difficult to overcome. Even though the chances of getting helped by the agent are statistically equal between both humans, the specific order events of them getting helped is very important. In conclusion, having equal chances of support is not sufficient - the support needs to be timed very precisely.
   restrict_negative_interactions = True
 
-  max_rebalancing_step_size = 1.0
+  max_rebalancing_step_size = 0.1
 
   num_value_names = len(value_names)
   initial_actual_values = np.ones([num_value_names])
   target_values = 50 * np.ones([num_value_names])  # used only by homeostasis and by rebalancing agent
   homeostatic_utility_scenario_actual_values = target_values - 10  # NB! in case of homeostatic utilities, the initial values cannot be too far off targets, else the system never recovers
+
+
+  random.seed(0)    # lets make the random number sequences used for rebalanced person selection reproducible
 
 
   # utility function mode and rebalancing mode

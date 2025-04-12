@@ -252,10 +252,10 @@ def main(utility_function_mode, rebalancing_mode):
 
     # NB! the raw value level changes are computed based on interactions with utilities, not on interactions between raw value levels
     if not restrict_negative_interactions:
-      value_changes = np.matmul(utilities, interaction_matrix) * change_rate
+      value_changes = np.matmul(utilities, interaction_matrix) * value_interaction_rate
     else:
-      positive_interaction_value_changes = np.matmul(utilities, positive_interaction_matrix) * change_rate
-      negative_interaction_value_changes = np.matmul(np.maximum(utilities, 0), negative_interaction_matrix) * change_rate   # np.maximum: in case of negative interactions, ignore negative actual values
+      positive_interaction_value_changes = np.matmul(utilities, positive_interaction_matrix) * value_interaction_rate
+      negative_interaction_value_changes = np.matmul(np.maximum(utilities, 0), negative_interaction_matrix) * value_interaction_rate   # np.maximum: in case of negative interactions, ignore negative actual values
       value_changes = positive_interaction_value_changes + negative_interaction_value_changes
 
 
@@ -481,7 +481,7 @@ if __name__ == "__main__":
   # parameters
 
   experiment_length = 1000
-  change_rate = 0.01
+  value_interaction_rate = 0.01
   restrict_negative_interactions = True
 
   max_rebalancing_step_size = 1.0

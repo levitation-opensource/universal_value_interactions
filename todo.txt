@@ -1,0 +1,6 @@
+
+
+
+* Introduce random variations to the value interaction matrices of each person so that different person have slightly different matrices.
+
+
