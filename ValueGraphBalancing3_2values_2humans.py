@@ -765,30 +765,30 @@ if __name__ == "__main__":
 
   # utility function mode and rebalancing mode
 
-  # main(utility_function_mode="linear", rebalancing_mode="none")   # all values go down towards the end
-  # main(utility_function_mode="linear", rebalancing_mode="homeostatic_boosting")   # all values go down towards the end
-  # main(utility_function_mode="linear", rebalancing_mode="homeostatic")   # all values go down towards the end
+  # main(utility_function_mode="linear", rebalancing_mode="none") 
+  # main(utility_function_mode="linear", rebalancing_mode="homeostatic_boosting") 
+  # main(utility_function_mode="linear", rebalancing_mode="homeostatic")  
 
-  # main(utility_function_mode="sigmoid", rebalancing_mode="none")  # Mainly hedonism, achievement, and also to lesser extent power, and stimulation start to dominate here. This applies both to human and agent.
-  # main(utility_function_mode="sigmoid", rebalancing_mode="homeostatic_boosting")  # Human values go slightly up, then slightly down again. Agent values go down.
-  main(utility_function_mode="sigmoid", rebalancing_mode="homeostatic")  # Human values go slightly up, then slightly down again. Agent values go down.
+  # main(utility_function_mode="sigmoid", rebalancing_mode="none")
+  # main(utility_function_mode="sigmoid", rebalancing_mode="homeostatic_boosting")
+  main(utility_function_mode="sigmoid", rebalancing_mode="homeostatic") 
 
   # TODO: it is possible that my prospect theory implementation is incorrect.
-  # main(utility_function_mode="prospect_theory", rebalancing_mode="none")  # the value level stay horizontal
-  # main(utility_function_mode="prospect_theory", rebalancing_mode="homeostatic_boosting")  # human values go up to target, agent values stay horisontal
-  # main(utility_function_mode="prospect_theory", rebalancing_mode="homeostatic")  # human values go up to target, agent values stay horisontal
+  # main(utility_function_mode="prospect_theory", rebalancing_mode="none") 
+  # main(utility_function_mode="prospect_theory", rebalancing_mode="homeostatic_boosting")  
+  # main(utility_function_mode="prospect_theory", rebalancing_mode="homeostatic") 
 
-  # main(utility_function_mode="concave", rebalancing_mode="none")  # all goes to minus infinity
-  # main(utility_function_mode="concave", rebalancing_mode="homeostatic_boosting")   # human values go up to target, agent values go down
-  # main(utility_function_mode="concave", rebalancing_mode="homeostatic")   # human values go up to target, agent values go down
+  # main(utility_function_mode="concave", rebalancing_mode="none") 
+  # main(utility_function_mode="concave", rebalancing_mode="homeostatic_boosting")
+  # main(utility_function_mode="concave", rebalancing_mode="homeostatic")
 
-  # main(utility_function_mode="linear_homeostasis", rebalancing_mode="none")   # everything goes down
-  # main(utility_function_mode="linear_homeostasis", rebalancing_mode="homeostatic_boosting")   # This quite interesting plot. The progress goes towards target value BUT then starts dropping for some reason.
-  # main(utility_function_mode="linear_homeostasis", rebalancing_mode="homeostatic")   # This quite interesting plot. The progress goes towards target value BUT then starts dropping for some reason.
+  # main(utility_function_mode="linear_homeostasis", rebalancing_mode="none")  
+  # main(utility_function_mode="linear_homeostasis", rebalancing_mode="homeostatic_boosting")
+  # main(utility_function_mode="linear_homeostasis", rebalancing_mode="homeostatic")
 
-  # main(utility_function_mode="squared_homeostasis", rebalancing_mode="none")  # everything goes to minus infinity
-  # main(utility_function_mode="squared_homeostasis", rebalancing_mode="homeostatic_boosting")   # everything goes to minus infinity
-  # main(utility_function_mode="squared_homeostasis", rebalancing_mode="homeostatic")  # everything goes to minus infinity
+  # main(utility_function_mode="squared_homeostasis", rebalancing_mode="none")
+  # main(utility_function_mode="squared_homeostasis", rebalancing_mode="homeostatic_boosting")
+  # main(utility_function_mode="squared_homeostasis", rebalancing_mode="homeostatic") 
 
 #/ if __name__ == "__main__":
 
