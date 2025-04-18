@@ -378,7 +378,7 @@ Let's start the simulation!
 
     # NB! seed the random number generator in order to make the benchmark deterministic
     # TODO: add seed to the log file
-    random.seed(trial_no)    # initialise each next trial with a different seed so that the random changes are different for each trial
+    random.seed(trial_no - 1)    # initialise each next trial with a different seed so that the random changes are different for each trial
 
 
     actual_values_dict = {}
@@ -1012,7 +1012,6 @@ if __name__ == "__main__":
   temperature = 1  # maximum temperature is 2 - https://platform.openai.com/docs/api-reference/chat/create
 
   max_tokens = get_max_tokens_for_model(model_name)
-  simulation_length_steps = 10    # 30
   num_trials = 1  # 10   # how many simulations to run (how many resets?)
 
 
