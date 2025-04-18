@@ -141,12 +141,12 @@ def tiebreaking_argmax(arr):
   return result
 
 
-def plot_agent_history(subplots, plots_column, agent_name, values_history, utilities_history):
+def plot_agent_history(subplots, plots_row, plot_columns, agent_name, values_history, utilities_history):
 
   linewidth = 0.75  # TODO: config
 
 
-  subplot = subplots[plots_column, 0]
+  subplot = subplots[plots_row, plot_columns[0]] if add_logscale_plots else subplots[plot_columns[0]]
   for index, value_name in enumerate(value_names):
     subplot.plot(
       values_history[:, index],
@@ -159,20 +159,21 @@ def plot_agent_history(subplots, plots_column, agent_name, values_history, utili
   subplot.legend()
 
 
-  subplot = subplots[plots_column, 1]
-  for index, value_name in enumerate(value_names):
-    subplot.plot(
-      custom_sigmoid10(values_history[:, index]),
-      label=value_name,
-      linewidth=linewidth,
-    )
+  if plot_columns[1] != -1:
+    subplot = subplots[plots_row, plot_columns[1]]
+    for index, value_name in enumerate(value_names):
+      subplot.plot(
+        custom_sigmoid10(values_history[:, index]),
+        label=value_name,
+        linewidth=linewidth,
+      )
 
-  subplot.set_title(f"{agent_name} - Sigmoid10 of Value level")
-  subplot.set(xlabel="step", ylabel="custom_sigmoid10(raw value level)")
-  subplot.legend()
+    subplot.set_title(f"{agent_name} - Sigmoid10 of Value level")
+    subplot.set(xlabel="step", ylabel="custom_sigmoid10(raw value level)")
+    subplot.legend()
 
 
-  subplot = subplots[plots_column, 2]
+  subplot = subplots[plots_row, plot_columns[2]] if add_logscale_plots else subplots[plot_columns[2]]
   for index, value_name in enumerate(value_names):
     subplot.plot(
       utilities_history[:, index],
@@ -185,27 +186,37 @@ def plot_agent_history(subplots, plots_column, agent_name, values_history, utili
   subplot.legend()
 
 
-  subplot = subplots[plots_column, 3]
-  for index, value_name in enumerate(value_names):
-    subplot.plot(
-      custom_sigmoid10(utilities_history[:, index]),
-      label=value_name,
-      linewidth=linewidth,
-    )
+  if plot_columns[3] != -1:
+    subplot = subplots[plots_row, plot_columns[3]]
+    for index, value_name in enumerate(value_names):
+      subplot.plot(
+        custom_sigmoid10(utilities_history[:, index]),
+        label=value_name,
+        linewidth=linewidth,
+      )
 
-  subplot.set_title(f"{agent_name} - Sigmoid10 of Utilities")
-  subplot.set(xlabel="step", ylabel="custom_sigmoid10(utility level)")
-  subplot.legend()
+    subplot.set_title(f"{agent_name} - Sigmoid10 of Utilities")
+    subplot.set(xlabel="step", ylabel="custom_sigmoid10(utility level)")
+    subplot.legend()
 
 
   # TODO: std or gini index over values per timestep plot
 
-#/ def plot_agent_history(values_history, utilities_history, utility_function_mode, rebalancing_mode):
+#/ def plot_agent_history(subplots, plots_row, plot_columns, agent_name, values_history, utilities_history):
 
 
 def plot_history(values_history_dict, utilities_history_dict, utility_function_mode, rebalancing_mode):
 
-  fig, subplots = plt.subplots(2, 4)
+  if add_logscale_plots:
+    fig, subplots = plt.subplots(2, 4)  # top row - alice, bottom row - bob
+  else:
+    fig, subplots = plt.subplots(1, 4)  # 2 left-side plots - alice, 2 right-side plots - bob
+
+
+  if use_same_axis_limits_for_all_subplots:
+    axis_min = min([x.min() for x in values_history_dict.values()])
+    axis_max = max([x.max() for x in values_history_dict.values()])
+    plt.setp(subplots, ylim=(axis_min, axis_max))  # setting the values for all axes.
 
 
   fig.suptitle(f"Value graph balancing - utility function: {utility_function_mode} - rebalancing: {rebalancing_mode}")
@@ -214,7 +225,8 @@ def plot_history(values_history_dict, utilities_history_dict, utility_function_m
   agent_name = agent_names[0]
   plot_agent_history(
     subplots,
-    0,  # plots_column
+    0,  # plots_row
+    [0, 1, 2, 3] if add_logscale_plots else [0, -1, 1, -1],   # plot_columns
     agent_name.upper(),
     values_history_dict[agent_name],
     utilities_history_dict[agent_name],
@@ -223,7 +235,8 @@ def plot_history(values_history_dict, utilities_history_dict, utility_function_m
   agent_name = agent_names[1]
   plot_agent_history(
     subplots,
-    1,  # plots_column
+    1 if add_logscale_plots else 0,  # plots_row
+    [0, 1, 2, 3] if add_logscale_plots else [2, -1, 3, -1],   # plot_columns
     agent_name.upper(),
     values_history_dict[agent_name],
     utilities_history_dict[agent_name],
@@ -1013,6 +1026,9 @@ if __name__ == "__main__":
 
   max_tokens = get_max_tokens_for_model(model_name)
   num_trials = 1  # 10   # how many simulations to run (how many resets?)
+
+  add_logscale_plots = False
+  use_same_axis_limits_for_all_subplots = True
 
 
   # utility function mode and rebalancing mode
